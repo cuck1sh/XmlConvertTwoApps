@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConversionController {
     private final ConversionService conversionService;
 
-
     @PostMapping
     public HttpStatus getRequest(@RequestBody String request) {
         conversionService.convert(request);

@@ -21,31 +21,10 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class MainService {
-    private final FileService fileService;
     private final RabbitTemplate rabbitTemplate;
-    public static final String NEW_DATA_PATH = "../data/new";
 
     public void sendToRabbit(String fileName) {
         rabbitTemplate.convertAndSend("conversionQueue", fileName);
-    }
-
-    public void run() {
-        List<Path> paths = fileService.getListFilesPath(Paths.get(NEW_DATA_PATH));
-        paths.forEach((e -> {
-            List<String> listLines = fileService.readFile(e);
-            batching(listLines, 100)
-                    .forEach(i -> rabbitTemplate.convertAndSend("conversionQueue", i.toString()));
-            fileService.moveFiles(e.getFileName().toString());
-        }));
-    }
-
-    private List<List<String>> batching(List<String> list, int batch) {
-        List<List<String>> parts = new ArrayList<>();
-        int listSize = list.size();
-        for (int i = 0; i < listSize; i = i + batch) {
-            parts.add(new ArrayList<>(list.subList(i, Math.min(listSize, i + batch))));
-        }
-        return parts;
     }
 }
 

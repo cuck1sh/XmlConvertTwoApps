@@ -157,7 +157,6 @@ public class FileService {
 
     private static int extractRecordCount(String fileName) {
         String[] parts = fileName.split("-");
-        log.info("extractRecordCount = {}", parts[4].replace(".log", ""));
         String recordCountStr = parts[4].replace(".log", "");
         return Integer.parseInt(recordCountStr);
     }
