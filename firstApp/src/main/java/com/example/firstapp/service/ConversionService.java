@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ConversionService {
     private final ObjectMapper objectMapper;
+    private final MainService mainService;
     public static final String DATA_PATH = "../data/new";
 
     @SneakyThrows
@@ -64,6 +65,7 @@ public class ConversionService {
             fileWriter.write(jsonString);
             fileWriter.write(System.lineSeparator());
         }
+        mainService.sendToRabbit(logFile.getName());
     }
 
     private Path renameFile(Path sourcePath) {
@@ -79,14 +81,21 @@ public class ConversionService {
         }
     }
 
-    private static String incrementFileName(String fileName) {
+    private Integer getFilesNumber(String fileName) {
         int lastDashIndex = fileName.lastIndexOf('-');
         int dotIndex = fileName.lastIndexOf('.');
 
         String numberPart = fileName.substring(lastDashIndex + 1, dotIndex);
 
-        int number = Integer.parseInt(numberPart);
-        String incrementedNumber = String.format("%04d", number + 1); // Форматируем обратно в 4 цифры
+        return Integer.parseInt(numberPart);
+    }
+
+    private String incrementFileName(String fileName) {
+        int lastDashIndex = fileName.lastIndexOf('-');
+        int dotIndex = fileName.lastIndexOf('.');
+
+        int number = getFilesNumber(fileName);
+        String incrementedNumber = String.format("%04d", number + 1);
 
         return fileName.substring(0, lastDashIndex + 1) + incrementedNumber + fileName.substring(dotIndex);
     }

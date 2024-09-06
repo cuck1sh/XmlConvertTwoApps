@@ -1,2 +1,9 @@
+spring:
+  rabbitmq:
+    host: hawk.rmq.cloudamqp.com
+    virtual-host: untsmnpi
+    port: 5672
+    username: untsmnpi
+    password: eZmZVl03FoVeTAjuX9yZV4JkWUm6P6vo
 server:
   port: 9092
